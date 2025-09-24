@@ -1,4 +1,4 @@
-  `yaml
+ `yaml
   name: Dispatch AI Daily Report
 
   on:
@@ -27,7 +27,7 @@
       - name: Create token from secrets
         run: echo "${{ secrets.TOKEN_JSON }}" > token.json
 
-      - name. Create news archive if it does not exist
+      - name: Create news archive if it does not exist
         run: touch news_archive.json
 
       - name: Install dependencies
