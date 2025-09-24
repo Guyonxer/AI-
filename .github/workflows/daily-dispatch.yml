@@ -1,0 +1,46 @@
+  `yaml
+  name: Dispatch AI Daily Report
+
+  on:
+    schedule:
+      # 每天的UTC时间0点执行 (对应北京时间早上8点)
+      - cron: '0 0   *'
+    workflow_dispatch:
+      # 这允许我们手动触发运行
+
+  jobs:
+    build-and-dispatch:
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Create credentials from secrets
+        run: echo "${{ secrets.CREDENTIALS_JSON }}" > credentials.json
+
+      - name: Create token from secrets
+        run: echo "${{ secrets.TOKEN_JSON }}" > token.json
+
+      - name. Create news archive if it does not exist
+        run: touch news_archive.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run the report script
+        run: node send_final_report.js
+
+      - name: Commit and push updated news archive
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add news_archive.json
+          git commit -m "Update news archive" || echo "No changes to commit"
+          git push
+  `
