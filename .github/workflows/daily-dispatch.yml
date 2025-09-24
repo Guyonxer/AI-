@@ -1,29 +1,38 @@
 yaml
   name: Dispatch AI Daily Report
+
   on:
+    workflow_dispatch:
     schedule:
       - cron: '0 0   *'
-    workflow_dispatch:
+
   jobs:
     build-and-dispatch:
       runs-on: ubuntu-latest
       steps:
         - name: Checkout repository
           uses: actions/checkout@v3
+
         - name: Set up Node.js
           uses: actions/setup-node@v3
           with:
             node-version: '18'
+
         - name: Create credentials.json from secret
           run: echo "${{ secrets.CREDENTIALS_JSON }}" > credentials.json
+
         - name: Create token.json from secret
           run: echo "${{ secrets.TOKEN_JSON }}" > token.json
+
         - name: Create news_archive.json if it does not exist
           run: touch news_archive.json
+
         - name: Install dependencies
           run: npm install
+
         - name: Run the report script
           run: node send_final_report.js
+
         - name: Commit and push updated news archive
           run: |
             git config --global user.name 'github-actions[bot]'
